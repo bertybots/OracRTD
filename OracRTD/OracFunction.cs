@@ -4,6 +4,7 @@ using System.Linq;
 using ExcelDna.Integration;
 using Quobject.SocketIoClientDotNet.Client;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace OracRTD
 {
@@ -14,8 +15,10 @@ namespace OracRTD
         //public static SocketIoClient client = new SocketIoClient();
         public static Socket client;
 
-        public static object[,] inputs = new object[1, 1];
         public static int inputsCount = 0;
+        public static object[,] inputsArray = new object[1, 1];
+        private static Dictionary<String, Double> inputsMap = new Dictionary<String, Double>();
+
         private static readonly object ioLock = new object();
 
         [ExcelFunction(Description = "Publish Curve Data")]
@@ -57,8 +60,19 @@ namespace OracRTD
         [ExcelFunction(Description = "Get Real-Time Curve from the Oracle")]
         public static object OracCurveInputsData(string reference)
         {
-            ConnectToOrac();
-            return inputs;
+            return inputsArray;
+        }
+
+        [ExcelFunction(Description = "Get Point from Real-Time Curve from the Oracle")]
+        public static object OracCurveInputsDatum(string reference, string datum)
+        {
+            Double d;
+            if (inputsMap.TryGetValue(datum, out d))
+            {
+                return d;
+            } else {
+                return ExcelDna.Integration.ExcelError.ExcelErrorNA;
+            }            
         }
 
         private static object[,] string2array(String s)
@@ -107,17 +121,23 @@ namespace OracRTD
                 {
                     count++;
                 }
-                object[,] result = new object[count, 2];
+
+                object[,] resultArray = new object[count, 2];
+                Dictionary<String, Double> resultMap = new Dictionary<String, Double>();
+
                 int c = 0;
                 foreach (dynamic token in tokens)
                 {
-                    Console.WriteLine(token.Name, token.Value.Value);
-                    result[c, 0] = token.Name;
-                    result[c, 1] = Convert.ToDouble(token.Value.Value);
+                    Double v = Convert.ToDouble(token.Value.Value);
+                    Console.WriteLine(token.Name, v);
+                    resultArray[c, 0] = token.Name;
+                    resultArray[c, 1] = v;
+                    resultMap.Add(token.Name, v);
                     c++;
                 }
 
-                inputs = result;
+                inputsArray = resultArray;
+                inputsMap = resultMap;
 
                 OracData.UpdateCurves("Curve." + inputsCount++);
             });

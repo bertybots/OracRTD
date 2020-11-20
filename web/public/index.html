@@ -16,11 +16,11 @@
     <link rel="stylesheet" href="css/orac.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
 
-    <meta property="og:url"           content="http://orac.uksouth.cloudapp.azure.com/" />
-    <meta property="og:type"          content="website" />
-    <meta property="og:title"         content="Orac" />
-    <meta property="og:description"   content="Please do not waste my time." />
-    <meta property="og:image"         content="http://orac.uksouth.cloudapp.azure.com/img/orac-152.jpg" />
+    <meta property="og:url" content="http://orac.uksouth.cloudapp.azure.com/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Orac" />
+    <meta property="og:description" content="Please do not waste my time." />
+    <meta property="og:image" content="http://orac.uksouth.cloudapp.azure.com/img/orac-152.jpg" />
 </head>
 
 <body class="theme-dark">
@@ -28,7 +28,30 @@
         <p>With the help of the automatics, of course you can.</p>
         <p><a href="orac.zip">Excel Addin</a></p>
         <p><a href="orac.xlsm">Example Sheet</a></p>
+        <audio id="oracAudio" src=""></audio>
+        <button id="oracButton" class="itc-button" type="button" onclick="playSample();">Test Orac</button>
     </div>
+
+    <script>
+        function playSample() {
+            var samples = [
+                'All Principal Circuits.wav',
+                'Free of Ambiguity .wav',
+                'I am Closing Down.wav',
+                'Instruction are Not Needed.wav',
+                'My Knowledge is Virtually Infinite.wav',
+                'Of Course I have to be Switched On.wav',
+                'State Your Programming Requirements.wav',
+                'The Question is Futile.wav'
+            ];
+            var index = Math.floor(Math.random()*samples.length)
+            var sample = samples[index];
+            document.getElementById('oracAudio').src = 'audio/' + sample;
+            document.getElementById('oracAudio').play();
+        }
+    </script>
 </body>
+
+
 
 </html>
