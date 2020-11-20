@@ -33,8 +33,6 @@
         <audio id="oracAudioRunning" src="audio/Orac Running.wav" onended="playClosingDown();"></audio>
         <audio id="oracAudioClosingDown" src="audio/I am Closing Down.wav" onended="playTurnOff();"></audio>
         <audio id="oracAudioTurnOff" src="audio/Orac Turn Off.wav"></audio>
-<!--        <button id="oracButton" class="itc-button" type="button" onclick="playSample();">Test Orac</button>
--->
     </div>
 
     <script>
@@ -74,6 +72,7 @@
         }
         function playTurnOff() {
             document.getElementById('oracAudioTurnOff').play();
+            running = false;
         }
     </script>
 </body>
