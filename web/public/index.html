@@ -24,36 +24,56 @@
 </head>
 
 <body class="theme-dark">
-    <div class="bg">
+    <div class="bg" onclick="playSample();">
         <p>With the help of the automatics, of course you can.</p>
-        <p><a href="orac.zip">Excel Addin</a></p>
-        <p><a href="orac.xlsm">Example Sheet</a></p>
-        <audio id="oracAudio" src="" onended="playEnded();"></audio>
-        <audio id="oracAudioOn" src="audio/On.wav" loop></audio>
-        <button id="oracButton" class="itc-button" type="button" onclick="playSample();">Test Orac</button>
+        <p><a href="orac.zip" onclick="event.stopPropagation();">Excel Addin</a></p>
+        <p><a href="orac.xlsm" onclick="event.stopPropagation();">Example Sheet</a></p>
+        <audio id="oracAudio" src="" onended="playRunning();"></audio>
+        <audio id="oracAudioTurnOn" src="audio/Orac Turn On.wav" onended="playRunning();"></audio>
+        <audio id="oracAudioRunning" src="audio/Orac Running.wav" onended="playClosingDown();"></audio>
+        <audio id="oracAudioClosingDown" src="audio/I am Closing Down.wav" onended="playTurnOff();"></audio>
+        <audio id="oracAudioTurnOff" src="audio/Orac Turn Off.wav"></audio>
+<!--        <button id="oracButton" class="itc-button" type="button" onclick="playSample();">Test Orac</button>
+-->
     </div>
 
     <script>
+        var running = false;
+        
         function playSample() {
             var samples = [
                 'All Principal Circuits.wav',
                 'Free of Ambiguity .wav',
-                'I am Closing Down.wav',
                 'Instruction are Not Needed.wav',
                 'My Knowledge is Virtually Infinite.wav',
                 'Of Course I have to be Switched On.wav',
                 'State Your Programming Requirements.wav',
                 'The Question is Futile.wav'
             ];
-            var index = Math.floor(Math.random()*samples.length)
-            var sample = samples[index];
+            var sample;
+            if (!running) {
+                running = true;
+                playTurnOn();
+            } else {
+                var index = Math.floor(Math.random()*samples.length)
+                sample = samples[index];
+            }
+            document.getElementById('oracAudioRunning').pause();
             document.getElementById('oracAudio').src = 'audio/' + sample;
-            document.getElementById('oracAudioOn').pause();
             document.getElementById('oracAudio').play();
         }
 
-        function playEnded() {
-            document.getElementById('oracAudioOn').play();
+        function playTurnOn() {
+            document.getElementById('oracAudioTurnOn').play();
+        }
+        function playRunning() {
+            document.getElementById('oracAudioRunning').play();
+        }
+        function playClosingDown() {
+            document.getElementById('oracAudioClosingDown').play();
+        }
+        function playTurnOff() {
+            document.getElementById('oracAudioTurnOff').play();
         }
     </script>
 </body>
