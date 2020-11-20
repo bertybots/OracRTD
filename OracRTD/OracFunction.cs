@@ -18,7 +18,7 @@ namespace OracRTD
         public static int inputsCount = 0;
         private static readonly object ioLock = new object();
 
-        [ExcelFunction(Description = "My first .NET function")]
+        [ExcelFunction(Description = "Publish Curve Data")]
         public static string OracPublish(string name, double value)
         {
             if (!started)
@@ -85,7 +85,9 @@ namespace OracRTD
 
         private static void ConnectToOrac()
         {
-            client = IO.Socket("http://localhost:8200");
+            //client = IO.Socket("http://localhost:8200");
+            client = IO.Socket("http://orac.uksouth.cloudapp.azure.com");
+
             client.On(Socket.EVENT_CONNECT, () =>
             {
                 connected = true;
