@@ -21,12 +21,7 @@ namespace OracRTD
         [ExcelFunction(Description = "Publish Curve Data")]
         public static string OracPublish(string name, double value)
         {
-            if (!started)
-            {
-                started = true;
-                ConnectToOrac();
-            }
-//            if (client.EngineIoClient.IsOpened)
+            ConnectToOrac();
             if (true)
             {
                 string p = JsonConvert.SerializeObject(new NameValue(name, value));
@@ -40,6 +35,7 @@ namespace OracRTD
         [ExcelFunction(Description = "Connection Status")]
         public static bool OracStatus(string name)
         {
+            ConnectToOrac();
             return connected;
         }
 
@@ -53,6 +49,7 @@ namespace OracRTD
         [ExcelFunction(Description = "Get Real-Time Curve from the Oracle")]
         public static object OracCurveInputs()
         {
+            ConnectToOrac();
             var res = XlCall.RTD("OracRTD.OracData", null, "CURVE");
             return res;
         }
@@ -60,6 +57,7 @@ namespace OracRTD
         [ExcelFunction(Description = "Get Real-Time Curve from the Oracle")]
         public static object OracCurveInputsData(string reference)
         {
+            ConnectToOrac();
             return inputs;
         }
 
@@ -85,6 +83,12 @@ namespace OracRTD
 
         private static void ConnectToOrac()
         {
+            if (started)
+            {
+                return;
+            }
+            started = true;
+
             //client = IO.Socket("http://localhost:8200");
             client = IO.Socket("http://orac.uksouth.cloudapp.azure.com");
 
