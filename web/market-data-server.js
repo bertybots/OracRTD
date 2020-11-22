@@ -61,13 +61,13 @@ function JSDateToExcelDate(inDate) {
 }
 
 setInterval(() => {
-    console.error('Sockets: ' + Object.keys(ioClients.sockets.connected).length);
-    console.error('Data: ' + dataCount);
+    console.log('Sockets: ' + Object.keys(ioClients.sockets.connected).length);
+    console.log('Data: ' + dataCount);
     dataCount = 0;
     if (dirty) {
-        console.error('Publishing Curve...');
+        console.log('Publishing Curve...');
         ioClients.in('curveInputs').emit('curveInputs', curvepoints);
-        console.error('Published Curve: ' + calcCount++);
+        console.log('Published Curve: ' + calcCount++);
         dirty = false;
     }
 }, 50);
