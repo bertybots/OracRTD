@@ -15,49 +15,37 @@ namespace OracRTD
 
         public OracData()
         {
-            timer = new Timer(Callback);
-        }
-
-        public static void UpdateCurves(string curveData)
-        {
-            foreach (Topic topic in topics)
-            {
-                String name;
-                if (topicInfos.TryGetValue(topic, out name))
-                {
-                    if (name.Equals("CURVE"))
-                    {
-                        topic.UpdateValue(curveData);
-                    }
-                }
-            }
-        }
-
-        private static void Start()
-        {
+            timer = new Timer(UpdateTime);
             timer.Change(500, 500);
         }
 
-        private static void Stop()
+        private static void UpdateTopic(string name, string value)
         {
-            timer.Change(-1, -1);
-        }
-
-        private static void Callback(object o)
-        {
-            Stop();
             foreach (Topic topic in topics)
             {
-                String name;
-                if (topicInfos.TryGetValue(topic, out name))
+                String item;
+                if (topicInfos.TryGetValue(topic, out item))
                 {
-                    if (name.Equals("NOW"))
+                    if (item.Equals(name))
                     {
-                        topic.UpdateValue(GetTime());
+                        topic.UpdateValue(value);
                     }
                 }
             }
-            Start();
+        }
+        private static void UpdateTime(object timer)
+        {
+            UpdateTopic("NOW", GetTime());
+        }
+
+        public static void UpdateCurves(string curveName, string value)
+        {
+            UpdateTopic(curveName, value);
+        }
+
+        public static void UpdateConnected(string value)
+        {
+            UpdateTopic("CONNECTION", value);
         }
 
         private static string GetTime()
@@ -75,7 +63,6 @@ namespace OracRTD
         {
             topics.Add(topic);
             topicInfos.Add(topic, topicInfo[0]);
-            Start();
             return "Querying...";
         }
 
@@ -83,8 +70,6 @@ namespace OracRTD
         {
             topics.Remove(topic);
             topicInfos.Remove(topic);
-            if (topics.Count == 0)
-                Stop();
         }
     }
 }
